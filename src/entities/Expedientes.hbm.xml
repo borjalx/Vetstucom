@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 30, 2019 6:38:54 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entities.Expedientes" table="expedientes" catalog="vetstucom" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="usuarios" class="entities.Usuarios" fetch="select">
+            <column name="USUARIO_ALTA" />
+        </many-to-one>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="30" />
+        </property>
+        <property name="apellidos" type="string">
+            <column name="APELLIDOS" length="30" />
+        </property>
+        <property name="dni" type="string">
+            <column name="DNI" length="12" />
+        </property>
+        <property name="cp" type="string">
+            <column name="CP" length="6" />
+        </property>
+        <property name="fechaAlta" type="date">
+            <column name="FECHA_ALTA" length="10" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="TELEFONO" length="12" />
+        </property>
+        <property name="NMascotas" type="java.lang.Integer">
+            <column name="N_MASCOTAS" />
+        </property>
+    </class>
+</hibernate-mapping>
