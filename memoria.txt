@@ -1,0 +1,3 @@
+Usuario:
+- Los usuarios hacen login con la matricula y la password
+- La matricula consta de 4 dígitos y tiene el formato de 'nnll' donde : n=número, l=letra
