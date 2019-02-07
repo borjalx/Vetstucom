@@ -86,7 +86,7 @@ public class VetstucomController {
         int tipoUsu = Auxiliares.pedirNumeroRango("Tipo usuario (1.Auxiliar | 2.Veterinario)", 1, 2);
         //
         Date today = new Date();
-        //SEGUIR CON EL SET
+        
         Set<Expedientes> expedientes = new HashSet<Expedientes>();
         
         user = new Usuarios(nombre, apellidos, dni, matricula, pass, tipoUsu, today, expedientes);
@@ -106,8 +106,30 @@ public class VetstucomController {
         if(u == null){
             throw new VetstucomException("[ERROR] Login incorrecto. Matricula o Password incorrect@");
         }
-        
+        updateUltimoAcceso(u, new Date());
         return u;
         
+    }
+    
+    //Función que consulta todos los expedientes y los muestra por pantalla
+    public void consultarExpedientes(Usuarios usuarioActual) throws VetstucomException{
+        if(usuarioActual == null){
+            throw new VetstucomException("[ERROR] El usuario debe estar logueado");
+        }
+        System.out.println("*** Consulta de expedientes ***");
+        
+        List<Expedientes> expedientes = vtDAO.getAllExpedientes();
+        
+        for (Expedientes expediente : expedientes) {
+            System.out.println(expediente);
+        }
+        
+    }
+    
+    //Función que actualiza el último acceso en la BBDD a partir de un Usuarios y un Date
+    public void updateUltimoAcceso(Usuarios usuario, Date date) {
+        System.out.println("[INFO] Último acceso actualizado, fecha = " + date); //BORRAR
+        usuario.setUltimoAcceso(date);
+        vtDAO.updateUser(usuario);
     }
 }

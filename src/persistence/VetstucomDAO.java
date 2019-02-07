@@ -5,8 +5,10 @@
  */
 package persistence;
 
+import entities.Expedientes;
 import entities.Usuarios;
 import exception.VetstucomException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
@@ -49,6 +51,8 @@ public class VetstucomDAO {
         sesion = HibernateUtil.createSessionFactory().openSession();
         String sentencia = "FROM Usuarios WHERE matricula = '" + matricula + "' and pass = '" + pass + "'";
         Query q = sesion.createQuery(sentencia);
+        u = (Usuarios) q.uniqueResult();
+        /*
         List<Usuarios> lista = q.list();
 
         if (lista.size() > 0) {
@@ -57,6 +61,7 @@ public class VetstucomDAO {
             u = null;
         }
         sesion.close();
+        */
 
         return u;
     }
@@ -84,14 +89,10 @@ public class VetstucomDAO {
     public void updateUser(Usuarios usuario) {
         sesion = HibernateUtil.createSessionFactory().openSession();
         Transaction tx = sesion.beginTransaction();
-        sesion.update(usuario);
+        //sesion.update(usuario);
+        sesion.merge(usuario);
         tx.commit();
         sesion.close();
-
-    }
-
-    //Función que actualiza el último acceso en la BBDD a partir de un Usuarios y un Date
-    public void updateUltimoAcceso(Usuarios usuario, Date date) {
 
     }
 
@@ -103,6 +104,45 @@ public class VetstucomDAO {
         tx.commit();
         sesion.close();
 
+    }
+    
+    //-----------------------\\
+    //-FUNCIONES EXPEDIENTES-||
+    //-----------------------//
+    
+    //Función que devuelve un Expediente a partir de su Id
+    public Expedientes getExpedienteById(int id){
+        return (Expedientes) sesion.get(Expedientes.class, id);
+    }
+    
+    //Función que devuleve todos los expedientes de un usuario a partir de un Usuarios
+    public List<Expedientes> getExpedientesByUsuario(Usuarios usuario){
+        return null;
+    }
+    
+    //Función que obtiene todos los Expedientes de la BBDD
+    public List<Expedientes> getAllExpedientes(){
+        //List<Expedientes> expedientes = new ArrayList<Expedientes>();
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        String sentencia = "FROM Expedientes";
+        Query q = sesion.createQuery(sentencia);
+        List<Expedientes> lista = q.list();
+        /*for(Expedientes ex : lista){
+            System.out.println(“Pers: “ + p.getNom_app() + “:” + p.getDNI());
+        }
+        */
+        sesion.close();
+        
+        return lista;
+    }
+    
+    //Función que añade un Usuario a la BBDD
+    public void insertExpediente(Expedientes e) throws VetstucomException {
+        sesion.getSessionFactory().openSession();
+        tx = sesion.beginTransaction();
+        sesion.save(e);
+        tx.commit();
+        sesion.close();
     }
 
 }
