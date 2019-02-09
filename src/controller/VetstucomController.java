@@ -6,6 +6,7 @@
 package controller;
 
 import auxiliares.Auxiliares;
+import com.sun.xml.internal.bind.v2.runtime.output.SAXOutput;
 import entities.Expedientes;
 import entities.Usuarios;
 import exception.VetstucomException;
@@ -118,11 +119,7 @@ public class VetstucomController {
         }
         System.out.println("*** Consulta de expedientes ***");
         
-        List<Expedientes> expedientes = vtDAO.getAllExpedientes();
-        
-        for (Expedientes expediente : expedientes) {
-            System.out.println(expediente);
-        }
+        mostrarExpedientes(vtDAO.getAllExpedientes());
         
     }
     
@@ -132,4 +129,85 @@ public class VetstucomController {
         usuario.setUltimoAcceso(date);
         vtDAO.updateUser(usuario);
     }
+    
+    //Función que crea un Expediente y lo inserta en la BBDD
+    public void altaExpediente(Usuarios usuario) throws VetstucomException{
+        if(usuario.getTipoUsuario() == 1){
+            throw new VetstucomException("[ERROR] No tienes permisos para ejecutar esta acción");
+        }
+        
+        Expedientes expediente;
+        
+        String nombre = Auxiliares.pedirCadena("Nombre:");
+        String apellidos = Auxiliares.pedirCadena("Apellidos: ");
+        String dni = Auxiliares.pedirDNI("DNI: ");
+        String cp = Auxiliares.pedirCadena("CP: ");
+        Date fechaAlta = new Date();
+        //String telefono = Auxiliares.pedirNTelefono("Número teléfono: ");
+        String telefono = Integer.toString(Auxiliares.pedirNumero("Número de teléfono: "));
+        int nMascotas = Auxiliares.pedirNumero("Número de mascotas: ");
+        
+        Expedientes exp = new Expedientes(usuario, nombre, apellidos, dni, cp, fechaAlta, telefono, nMascotas);
+        
+        vtDAO.insertExpediente(exp);
+        
+        System.out.println("[INFO] Expediente dado de alta correctamente");
+    }
+    
+    //Funcion que muestra todos los expedientes disponibles
+    public void mostrarExpedientes(List<Expedientes> expedientes){
+        System.out.println("*** EXPEDIENTES ***");
+        //BORRAR - List<Expedientes> expedientes = vtDAO.getAllExpedientes();
+        int x = 0;
+        for (Expedientes expediente : expedientes) {
+            System.out.println("Nº exp = "+x+">"+expediente);
+            x++;
+        }
+        System.out.println("*******************");
+    }
+    
+    //Función que da de baja a un usuario
+    public void bajaExpediente(Usuarios usuario) throws VetstucomException{
+        if(usuario.getTipoUsuario() == 1){
+            throw new VetstucomException("[ERROR] No tienes permisos para ejecutar esta acción");
+        }
+        mostrarExpedientes(vtDAO.getAllExpedientes());
+        int nExpedientes = vtDAO.getAllExpedientes().size();
+        
+        int nExp = Auxiliares.pedirNumeroRango("Nº ID Expediente: ", 1, nExpedientes);
+        
+        vtDAO.deleteExpedienteByID(nExp);
+        
+        System.out.println("[INFO] - Expediente dado de baja");
+    }
+    
+    //Función que modifica un Expediente de la BBDD
+    public void editarExpediente(Usuarios usuario) throws VetstucomException{
+        if(usuario.getTipoUsuario() == 1){
+            throw new VetstucomException("[ERROR] No tienes permisos para ejecutar esta acción");
+        }
+        
+        
+        List<Expedientes> exp = vtDAO.getAllExpedientes();
+        mostrarExpedientes(exp);
+        int nExpedientes = vtDAO.getAllExpedientes().size();
+        
+        int nExp = Auxiliares.pedirNumeroRango("Nº Expediente: ", 1, nExpedientes);
+        
+        Expedientes e = exp.get(nExp);
+        //CP actual, telefono actual y nmascotas actual
+        String nuevoCP = Auxiliares.pedirCadena("(CP actual : " + e.getCp() + ") Nuevo CP: ");
+        String nuevoTel = Auxiliares.pedirCadena("(Teléfono actual : " + e.getTelefono() + ") Nuevo teléfono: ");
+        int nuevoNM = Auxiliares.pedirNumero("(Nº mascotas actual : " + e.getNMascotas() + ") Nuevo nº mascotas: ");
+        
+        e.setCp(nuevoCP);
+        e.setTelefono(nuevoTel);
+        e.setNMascotas(nuevoNM);
+        
+        vtDAO.updateExpediente(e);
+        
+        System.out.println("[INFO] - Expediente actualizado");
+    }
+    
+    
 }

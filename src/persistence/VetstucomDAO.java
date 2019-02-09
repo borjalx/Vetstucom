@@ -112,12 +112,24 @@ public class VetstucomDAO {
     
     //Función que devuelve un Expediente a partir de su Id
     public Expedientes getExpedienteById(int id){
-        return (Expedientes) sesion.get(Expedientes.class, id);
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        String sentencia = "FROM Expedientes WHERE id = " + id;
+        Query q = sesion.createQuery(sentencia);
+        //List lista = q.list();
+        Expedientes e = (Expedientes) q.uniqueResult();
+        sesion.close();
+        //return lista.get(0);
+        return e;
     }
     
     //Función que devuleve todos los expedientes de un usuario a partir de un Usuarios
     public List<Expedientes> getExpedientesByUsuario(Usuarios usuario){
-        return null;
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        String sentencia = "FROM Expedientes WHERE usuarios.matricula = " + usuario.getMatricula();
+        Query q = sesion.createQuery(sentencia);
+        List<Expedientes> lista = q.list();
+        sesion.close();
+        return lista;
     }
     
     //Función que obtiene todos los Expedientes de la BBDD
@@ -138,11 +150,31 @@ public class VetstucomDAO {
     
     //Función que añade un Usuario a la BBDD
     public void insertExpediente(Expedientes e) throws VetstucomException {
-        sesion.getSessionFactory().openSession();
+        sesion = HibernateUtil.createSessionFactory().openSession();
         tx = sesion.beginTransaction();
         sesion.save(e);
         tx.commit();
         sesion.close();
     }
-
+    
+    //Función que elimina un expediente de la BBDD a partir de un ID
+    public void deleteExpedienteByID(int id) throws VetstucomException {
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        tx = sesion.beginTransaction();
+        Expedientes e = (Expedientes)sesion.load(Expedientes.class, id);
+        sesion.delete(e);
+        tx.commit();
+        sesion.close();
+    }
+    
+    //Función que actualiza un expediente en la BBDD
+    //public void updateExpedienteByID(int id) throws VetstucomException {
+    public void updateExpediente(Expedientes expediente) throws VetstucomException {
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        tx = sesion.beginTransaction();
+        //Expedientes e = (Expedientes)sesion.load(Expedientes.class, id);
+        sesion.update(expediente);
+        tx.commit();
+        sesion.close();
+    }
 }

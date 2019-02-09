@@ -100,7 +100,7 @@ public class Expedientes  implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "Expedientes con" + "ID=" + id + " ==> Matrícula usuario =" + usuarios.getMatricula() + ", Nombre=" + nombre + ", Apellidos=" + apellidos + ", DNI =" + dni + ", CP =" + cp + ", Fecha alta=" + fechaAlta + ", Telefono=" + telefono + ", Nº Mascotas=" + NMascotas + '}';
+        return "Expedientes con ID=" + id + " ==> Matrícula usuario =" + usuarios.getMatricula() + ", Nombre=" + nombre + ", Apellidos=" + apellidos + ", DNI =" + dni + ", CP =" + cp + ", Fecha alta=" + fechaAlta + ", Telefono=" + telefono + ", Nº Mascotas=" + NMascotas + '}';
     }
 
     

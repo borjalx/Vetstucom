@@ -48,6 +48,28 @@ public class P04Vetstucom {
                         System.out.println(ex.getMessage());
                     }
                     break;
+                case 2:
+                    try {
+                        vstController.altaExpediente(usuarioActual);
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case 3:
+                    try {
+                        vstController.bajaExpediente(usuarioActual);
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case 4:
+                    try {
+                        vstController.editarExpediente(usuarioActual);
+                        
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
                 case 0:
                     System.out.println("Hasta la vista!");
                     break;
