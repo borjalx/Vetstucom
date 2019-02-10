@@ -19,21 +19,24 @@ import persistence.HibernateUtil;
  */
 public class P04Vetstucom {
 
-    private static Usuarios usuarioActual;
+    private static Usuarios usuarioActual = null;
     private static VetstucomController vstController = new VetstucomController();
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            //instrucción para limitar el log de Hibernate
+        do {
+            try {
+                //instrucción para limitar el log de Hibernate
 //        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
 //try {
-            usuarioActual = vstController.userLogin();
-        } catch (VetstucomException ex) {
-            System.out.println(ex.getMessage());
-        }
+                usuarioActual = vstController.userLogin();
+            } catch (VetstucomException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } while (usuarioActual == null);
+
         int tipoUsu = usuarioActual.getTipoUsuario();
         int op = 9;
 
@@ -65,7 +68,34 @@ public class P04Vetstucom {
                 case 4:
                     try {
                         vstController.editarExpediente(usuarioActual);
-                        
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case 5:
+                    try {
+                        vstController.createUser(usuarioActual);
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case 6:
+                    try {
+                        vstController.bajaUsuario(usuarioActual);
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case 7:
+                    try {
+                        vstController.editarUsuario(usuarioActual);
+                    } catch (VetstucomException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    break;
+                case 8:
+                    try {
+                        vstController.consultarUsuarios(usuarioActual);
                     } catch (VetstucomException ex) {
                         System.out.println(ex.getMessage());
                     }
@@ -125,7 +155,6 @@ public class P04Vetstucom {
         System.out.println("0. Salir");
         System.out.println("************");
     }*/
-
     //Función que muestra el menú del administrador
     public static void menuCompleto() {
         System.out.println("*** MENÚ ***");
