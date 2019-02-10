@@ -29,12 +29,8 @@ public class VetstucomDAO {
     }
 
     //Función que añade un Usuario a la BBDD
-    public void insertUsuario(Usuarios u) throws VetstucomException {
-        Usuarios aux = getUsuarioByMatricula(u.getNombre());
-        if (aux != null) {
-            throw new VetstucomException("Ya existe un usuario con esa matricula");
-        }
-        sesion.getSessionFactory().openSession();
+    public void insertUsuario(Usuarios u) {
+        sesion = HibernateUtil.createSessionFactory().openSession();
         tx = sesion.beginTransaction();
         sesion.save(u);
         tx.commit();
@@ -74,13 +70,15 @@ public class VetstucomDAO {
 
     //Función que devuelve un Usuario a partir de un nombre
     public Usuarios getUsuarioByMatricula(String matricula) {
-        Usuarios u = new Usuarios();
+        //Usuarios u = null;
         sesion = HibernateUtil.createSessionFactory().openSession();
-        String sentencia = "FROM usuarios WHERE matricula = " + matricula;
+        String sentencia = "FROM Usuarios WHERE matricula = '" + matricula+"'";
         Query q = sesion.createQuery(sentencia);
+        Usuarios u = (Usuarios) q.uniqueResult();
         //List lista = q.list();
         sesion.close();
         //return lista.get(0);
+        //System.out.println("Usuario traído por matrícula = " + u);
         return u;
 
     }
@@ -106,6 +104,45 @@ public class VetstucomDAO {
 
     }
     
+    //Función que devuelve un List<Usuarios> detodos los usuarios actuales de la BBDD
+    public List<Usuarios> getAllUsuarios(){
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        String sentencia = "FROM Usuarios";
+        Query q = sesion.createQuery(sentencia);
+        List<Usuarios> lista = q.list();
+        /*for(Expedientes ex : lista){
+            System.out.println(“Pers: “ + p.getNom_app() + “:” + p.getDNI());
+        }
+        */
+        sesion.close();
+        
+        return lista;
+    }
+    
+    //Función que devuelve un List<Usuarios> de todos los usuarios actuales de la BBDD excepto el admin
+    public List<Usuarios> getAllUsuariosNoAdmin(){
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        String sentencia = "FROM Usuarios where id != 1";
+        Query q = sesion.createQuery(sentencia);
+        List<Usuarios> lista = q.list();
+        /*for(Expedientes ex : lista){
+            System.out.println(“Pers: “ + p.getNom_app() + “:” + p.getDNI());
+        }
+        */
+        sesion.close();
+        
+        return lista;
+    }
+    
+    //Función que elimina un Usuarios de la BBDD a partir de un ID
+    public void deleteUsuarioByID(int id) throws VetstucomException {
+        sesion = HibernateUtil.createSessionFactory().openSession();
+        tx = sesion.beginTransaction();
+        Usuarios u = (Usuarios)sesion.load(Usuarios.class, id);
+        sesion.delete(u);
+        tx.commit();
+        sesion.close();
+    }
     //-----------------------\\
     //-FUNCIONES EXPEDIENTES-||
     //-----------------------//

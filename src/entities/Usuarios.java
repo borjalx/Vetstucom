@@ -100,6 +100,27 @@ public class Usuarios  implements java.io.Serializable {
         this.expedienteses = expedienteses;
     }
 
+    @Override
+    public String toString() {
+        String tipoU = "";
+        switch(tipoUsuario){
+            case 0:
+                tipoU = "Administrador";
+                break;
+            case 1:
+                tipoU = "Auxiliar";
+                break;
+            case 2:
+                tipoU = "Veterinario";
+                break;
+            default:
+                tipoU = "No definido";
+                break;
+        }
+        //BORRAR - + ", Pass=" + pass + 
+        return "Usuario con " + "ID=" + id + "  ==>  Nombre=" + nombre + ", Apellidos=" + apellidos + ", DNI=" + dni + ", Matricula=" + matricula + ", Tipo de usuario=" + tipoU + ", Último acceso=" + ultimoAcceso + ", Expedienteses=" + expedienteses + '}';
+    }
+
 
 
 
